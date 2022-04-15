@@ -1,0 +1,31 @@
+﻿@page "/"
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+<h1>Minhas notas no LocalStorage</h1>
+
+<textarea @bind="minhasNotasPessoais" />
+<br />
+
+<button class="btn btn-success" @onclick="AtualizaLocalStorage">Salvar</button>
+<button class="btn btn-danger" @onclick="LimpaLocalStorage">Limpar</button>
+
+@code {
+    public string minhasNotasPessoais { get; set; }
+    const string notaKey = "windows";
+
+    protected override async Task OnInitializedAsync()
+    {
+        minhasNotasPessoais = await localStorage.GetItemAsync<string>(notaKey);
+    }
+
+    private async Task AtualizaLocalStorage()
+    {
+        await localStorage.SetItemAsync(notaKey, minhasNotasPessoais);
+    }
+
+    private async Task LimpaLocalStorage()
+    {
+        minhasNotasPessoais = "";
+        await localStorage.ClearAsync();
+    }
+}
